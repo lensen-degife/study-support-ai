@@ -4,8 +4,8 @@
 **Team**: Team 1  
 **Role**: Academic Support Tutor  
 **Date**: 24 October 2026  
-**Live Frontend**: [https://study-support-vertex.vercel.app/](https://study-support-vertex.vercel.app/)  
-**Live Backend API**: [https://study-support-1.onrender.com](https://study-support-1.onrender.com)  
+**Live Frontend**: [https://study-support-ai-ivory.vercel.app/](https://study-support-ai-ivory.vercel.app/)  
+**Live Backend API**: [https://study-support-ai.onrender.com](https://study-support-ai.onrender.com)  
 
 ---
 

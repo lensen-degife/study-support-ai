@@ -1,13 +1,13 @@
 /**
  * Frontend API Client for AI Study Support Agent
- * Automatically connects to backend on Render (https://study-support-1.onrender.com) or localhost.
+ * Automatically connects to backend on Render (https://study-support-ai.onrender.com) or localhost.
  */
 
 const API_BASE = 
   import.meta.env.VITE_API_URL || 
   (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
     ? 'http://localhost:5000'
-    : 'https://study-support-1.onrender.com');
+    : 'https://study-support-ai.onrender.com');
 
 /**
  * Generic fetch wrapper with JSON error handling and credentials support (HttpOnly cookies)

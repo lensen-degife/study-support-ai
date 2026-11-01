@@ -4,8 +4,8 @@
 **Role**: Academic Support Tutor  
 **Team**: Team 1  
 **Submission Date**: 24 October 2026  
-**Live Frontend Application**: [https://study-support-vertex.vercel.app/](https://study-support-vertex.vercel.app/)  
-**Live Backend API**: [https://study-support-1.onrender.com](https://study-support-1.onrender.com)  
+**Live Frontend Application**: [https://study-support-ai-ivory.vercel.app/](https://study-support-ai-ivory.vercel.app/)  
+**Live Backend API**: [https://study-support-ai.onrender.com](https://study-support-ai.onrender.com)  
 **Target Syllabus**: CS101 Introduction to Python Programming (`SEC-PY-101`, `SEC-PY-102`, `SEC-PY-103`)  
 
 ---
