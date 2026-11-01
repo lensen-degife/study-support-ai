@@ -1,3 +1,35 @@
+INSERT INTO users (id, email, hashed_password, name, role)
+VALUES 
+(
+    '00000000-0000-0000-0000-000000000001',
+    'jordan.lee@university.edu',
+    '$2b$10$DR3Z5/jiUo666wNlyXGTDeugb9DPqaO2.YSbxib009fX6pEm/BORC',
+    'Jordan Lee',
+    'student'
+),
+(
+    '00000000-0000-0000-0000-000000000002',
+    'alex.kim@university.edu',
+    '$2b$10$DR3Z5/jiUo666wNlyXGTDeugb9DPqaO2.YSbxib009fX6pEm/BORC',
+    'Alex Kim',
+    'student'
+),
+(
+    '00000000-0000-0000-0000-000000000003',
+    'tutor@university.edu',
+    '$2b$10$DR3Z5/jiUo666wNlyXGTDeugb9DPqaO2.YSbxib009fX6pEm/BORC',
+    'Dr. Turing',
+    'tutor'
+),
+(
+    '00000000-0000-0000-0000-000000000004',
+    'admin@university.edu',
+    '$2b$10$DR3Z5/jiUo666wNlyXGTDeugb9DPqaO2.YSbxib009fX6pEm/BORC',
+    'Admin User',
+    'admin'
+)
+ON CONFLICT (email) DO NOTHING;
+
 INSERT INTO students (id, name, email)
 VALUES (
     'STU_101',

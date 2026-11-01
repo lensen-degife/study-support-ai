@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+/* Anti-Scraping & Copy Shielding for Quiz Content */
+.quiz-lockdown-shield {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

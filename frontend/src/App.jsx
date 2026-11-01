@@ -11,6 +11,19 @@ import {
   checkBackendHealth,
   API_BASE
 } from './services/api';
+import { useAuth } from './context/AuthContext';
+import AuthModal from './components/AuthModal';
+import ProtectedRoute from './components/ProtectedRoute';
+import { useQuizIntegrity } from './hooks/useQuizIntegrity';
+import {
+  PreQuizLockdownModal,
+  QuizLockdownHUD,
+  FullscreenWarningOverlay,
+  FocusLostWarningModal,
+  LockedOutOverlay,
+  IntegrityToast,
+  SubmissionIntegrityCard,
+} from './components/QuizLockdownGuard';
 
 // Demo Course and Student Profile aligned with SRS
 const STUDENT_PROFILE = {
@@ -137,9 +150,21 @@ const COURSE_SECTIONS = [
 ];
 
 export default function App() {
+  const { user, isAuthenticated, logout } = useAuth();
   const [activeTab, setActiveTab] = useState('Welcome');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState('login');
+
+  // Quiz Lockdown & Anti-Cheat System State
+  const [lockdownIntensity, setLockdownIntensity] = useState(2); // 1: Casual, 2: Strict
+  const [currentAttemptId, setCurrentAttemptId] = useState(null);
+  const [preQuizModal, setPreQuizModal] = useState({
+    isOpen: false,
+    topicTitle: '',
+    onStart: null,
+  });
+
   // Backend Connection State
   const [backendStatus, setBackendStatus] = useState({ connected: false, checking: true, mode: '' });
 
@@ -214,6 +239,11 @@ export default function App() {
     const interval = setInterval(checkHealth, 8000);
     return () => clearInterval(interval);
   }, []);
+
+  // Re-fetch saved plans on authentication change
+  useEffect(() => {
+    fetchSavedPlans();
+  }, [user]);
 
   // Sync synthetic attempts from savedPlans if quizAttempts is empty
   useEffect(() => {
@@ -439,8 +469,10 @@ export default function App() {
     if (!quizData) return;
     setIsEvaluating(true);
 
+    const activeAttempt = currentAttemptId || `quiz_${Date.now()}`;
     const payload = {
-      quizId: `quiz_${Date.now()}`,
+      quizId: activeAttempt,
+      attemptId: activeAttempt,
       topic: topic,
       studentAnswers: userAnswers,
       questions: quizData.map(q => ({
@@ -456,6 +488,10 @@ export default function App() {
 
       setScoreResult(data);
       setStudyPlan(data.proposedActivities || []);
+
+      if (integrity?.isFullscreen) {
+        integrity.exitFullscreen();
+      }
 
       // Calculate previous attempt analysis
       const existingAttempts = quizAttempts.filter(a => 
@@ -505,8 +541,8 @@ export default function App() {
 
     const payload = {
       confirmed: true,
-      studentId: STUDENT_PROFILE.id,
-      studentName: STUDENT_PROFILE.name,
+      studentId: user?.id || STUDENT_PROFILE.id,
+      studentName: user?.name || STUDENT_PROFILE.name,
       topic: topic,
       score: scoreResult.score,
       totalQuestions: scoreResult.total,
@@ -570,6 +606,25 @@ export default function App() {
     setLoadingPracticeQuiz(false);
   };
 
+  const handleTriggerPracticeQuizPreCheck = (sectionId, title) => {
+    setPreQuizModal({
+      isOpen: true,
+      topicTitle: title,
+      onStart: async () => {
+        setPreQuizModal({ isOpen: false, topicTitle: '', onStart: null });
+        const attemptId = `practice_att_${Date.now()}`;
+        setCurrentAttemptId(attemptId);
+        if (integrity?.resetIntegrityState) {
+          integrity.resetIntegrityState();
+        }
+        if (lockdownIntensity >= 2 && integrity?.requestFullscreen) {
+          await integrity.requestFullscreen();
+        }
+        await handleStartPracticeQuiz(sectionId, title);
+      },
+    });
+  };
+
   const handlePracticeOptionSelect = (qId, optionText) => {
     setPracticeAnswers(prev => ({ ...prev, [qId]: optionText }));
   };
@@ -578,8 +633,10 @@ export default function App() {
     if (!activePracticeQuiz) return;
     setIsEvaluatingPractice(true);
 
+    const activeAttempt = currentAttemptId || `practice_${Date.now()}`;
     const payload = {
-      quizId: `practice_${Date.now()}`,
+      quizId: activeAttempt,
+      attemptId: activeAttempt,
       topic: activePracticeQuiz.title,
       studentAnswers: practiceAnswers,
       questions: activePracticeQuiz.questions.map(q => ({
@@ -593,6 +650,10 @@ export default function App() {
     try {
       const data = await evaluateAssessment(payload);
       setPracticeResult(data);
+
+      if (integrity?.isFullscreen) {
+        integrity.exitFullscreen();
+      }
 
       // Calculate previous attempt analysis
       const existingAttempts = quizAttempts.filter(a => 
@@ -635,14 +696,34 @@ export default function App() {
     }
   };
 
+  // Active quiz lockdown controller
+  const isQuizActive = Boolean(
+    (activeTab === 'Quizzes' && activePracticeQuiz && !practiceResult) ||
+    (activeTab === 'AI Tutor' && quizData && !scoreResult)
+  );
+
+  const integrity = useQuizIntegrity({
+    isActive: isQuizActive,
+    attemptId: currentAttemptId,
+    intensityLevel: lockdownIntensity,
+    maxViolations: 3,
+    onAutoSubmit: () => {
+      if (activeTab === 'Quizzes' && activePracticeQuiz && !practiceResult) {
+        handleSubmitPracticeQuiz();
+      } else if (activeTab === 'AI Tutor' && quizData && !scoreResult) {
+        handleSubmitQuiz();
+      }
+    },
+  });
+
   const handleSavePracticePlan = async () => {
     if (!practiceResult || !activePracticeQuiz) return;
     setIsSavingPracticePlan(true);
 
     const payload = {
       confirmed: true,
-      studentId: STUDENT_PROFILE.id,
-      studentName: STUDENT_PROFILE.name,
+      studentId: user?.id || STUDENT_PROFILE.id,
+      studentName: user?.name || STUDENT_PROFILE.name,
       topic: activePracticeQuiz.title,
       score: practiceResult.score,
       totalQuestions: practiceResult.total || 3,
@@ -737,20 +818,82 @@ export default function App() {
           </nav>
         </div>
 
-        {/* Student Profile (No Login Gate) */}
+        {/* User Profile & Auth Section */}
         <div className="space-y-2 pt-4 border-t border-slate-800/80">
-          <div className="bg-slate-800/80 p-3 rounded-xl border border-slate-700/50 flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-full bg-indigo-500/20 text-indigo-300 flex items-center justify-center font-bold text-sm border-2 border-indigo-500 shrink-0">
-              JL
+          {isAuthenticated && user ? (
+            <>
+              <div className="bg-slate-800/80 p-3 rounded-xl border border-slate-700/50 flex items-center space-x-3">
+                <div className="w-9 h-9 rounded-full bg-indigo-500/20 text-indigo-300 flex items-center justify-center font-bold text-sm border-2 border-indigo-500 shrink-0">
+                  {(user.name || 'User')
+                    .split(' ')
+                    .filter(Boolean)
+                    .map((n) => n[0])
+                    .join('')
+                    .slice(0, 2)
+                    .toUpperCase()}
+                </div>
+                <div className="overflow-hidden min-w-0 flex-1">
+                  <div className="flex items-center space-x-1.5">
+                    <p className="text-xs font-bold text-white truncate">{user.name}</p>
+                    <span className="text-[9px] uppercase font-extrabold bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-500/30">
+                      {user.role || 'student'}
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-slate-400 font-mono truncate">{user.email}</p>
+                </div>
+              </div>
+
+              {/* Lockdown Setting indicator */}
+              <div className="flex items-center justify-between px-2 py-1 bg-slate-800/40 rounded-lg border border-slate-800 text-[10px] text-slate-400">
+                <span>🛡️ Anti-AI Mode:</span>
+                <span className="font-bold text-indigo-300 font-mono">
+                  {lockdownIntensity === 2 ? 'L2 Strict' : 'L1 Casual'}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={logout}
+                className="w-full py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-medium border border-slate-700/60 transition flex items-center justify-center space-x-1"
+              >
+                <span>Sign Out</span>
+              </button>
+            </>
+          ) : (
+            <div className="bg-slate-800/80 p-3 rounded-xl border border-slate-700/50 space-y-2">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-8 h-8 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center text-xs font-bold">
+                  👤
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-slate-200">Guest Visitor</p>
+                  <p className="text-[10px] text-slate-400">Sign in to save progress</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-1.5 pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthModalMode('login');
+                    setIsAuthModalOpen(true);
+                  }}
+                  className="py-1.5 px-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-[11px] font-bold transition text-center shadow-sm"
+                >
+                  Sign In
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthModalMode('register');
+                    setIsAuthModalOpen(true);
+                  }}
+                  className="py-1.5 px-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-[11px] font-bold transition text-center"
+                >
+                  Register
+                </button>
+              </div>
             </div>
-            <div className="overflow-hidden min-w-0">
-              <p className="text-xs font-bold text-white truncate">{STUDENT_PROFILE.name}</p>
-              <p className="text-[10px] text-slate-400 font-mono truncate">ID: {STUDENT_PROFILE.id}</p>
-            </div>
-          </div>
-          <div className="text-[11px] text-slate-400 text-center font-medium py-1">
-            Enrolled: <span className="text-emerald-400 font-semibold">{STUDENT_PROFILE.semester}</span>
-          </div>
+          )}
         </div>
       </aside>
 
@@ -787,6 +930,58 @@ export default function App() {
                 <span>Connecting...</span>
               </span>
             )}
+
+            {/* Anti-AI Lockdown Mode Quick Selector */}
+            <div className="hidden lg:flex items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200 text-[10px]">
+              <span className="px-1.5 text-slate-500 font-bold">Lockdown:</span>
+              <button
+                type="button"
+                onClick={() => setLockdownIntensity(1)}
+                className={`px-2 py-0.5 rounded-lg font-bold transition ${
+                  lockdownIntensity === 1 ? 'bg-white shadow-2xs text-indigo-700' : 'text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                L1 Casual
+              </button>
+              <button
+                type="button"
+                onClick={() => setLockdownIntensity(2)}
+                className={`px-2 py-0.5 rounded-lg font-bold transition ${
+                  lockdownIntensity === 2 ? 'bg-indigo-600 text-white shadow-2xs' : 'text-slate-500 hover:text-slate-800'
+                }`}
+              >
+                L2 Strict
+              </button>
+            </div>
+
+            {isAuthenticated && user ? (
+              <div className="flex items-center space-x-2 pl-2 border-l border-slate-200">
+                <span className="hidden sm:inline-block text-xs font-semibold text-slate-700 max-w-[120px] truncate">
+                  {user.name}
+                </span>
+                <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md border border-indigo-100">
+                  {user.role}
+                </span>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="text-xs text-slate-500 hover:text-slate-800 font-medium px-2 py-1 rounded hover:bg-slate-100 transition"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setAuthModalMode('login');
+                  setIsAuthModalOpen(true);
+                }}
+                className="text-xs font-bold px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition shadow-xs"
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </header>
 
@@ -800,7 +995,7 @@ export default function App() {
                   <span className="inline-block bg-indigo-500/30 text-indigo-200 text-[10px] font-bold px-3 py-1 rounded-md uppercase tracking-wider">
                     Academic Support Active
                   </span>
-                  <h3 className="text-xl sm:text-2xl font-black">Hello, {STUDENT_PROFILE.name}!</h3>
+                  <h3 className="text-xl sm:text-2xl font-black">Hello, {user ? user.name : 'Student'}!</h3>
                   <p className="text-xs text-indigo-100 max-w-lg leading-relaxed">
                     Your AI Study Support Tutor assesses your understanding of Python programming topics, evaluates quizzes with instant feedback, and formulates tailored study plans.
                   </p>
@@ -862,7 +1057,14 @@ export default function App() {
 
           {/* AI TUTOR PAGE */}
           {activeTab === 'AI Tutor' && (
-            <div className="max-w-5xl mx-auto space-y-6">
+            <ProtectedRoute
+              resourceName="AI Tutor interactive diagnostic"
+              onRequireAuth={() => {
+                setAuthModalMode('login');
+                setIsAuthModalOpen(true);
+              }}
+            >
+              <div className="max-w-5xl mx-auto space-y-6">
               
               {/* Step 1: Topic Input */}
               <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs">
@@ -978,7 +1180,14 @@ export default function App() {
 
               {/* Step 2: Interactive Quiz */}
               {quizData && (
-                <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+                <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4 quiz-lockdown-shield select-none">
+                  <QuizLockdownHUD
+                    intensityLevel={lockdownIntensity}
+                    violationsCount={integrity.violationsCount}
+                    maxViolations={3}
+                    isFullscreen={integrity.isFullscreen}
+                    onRequestFullscreen={integrity.requestFullscreen}
+                  />
                   <div className="flex items-center justify-between border-b pb-3 border-slate-100">
                     <div>
                       <h3 className="text-sm sm:text-base font-bold text-slate-900">2. Knowledge Assessment Quiz</h3>
@@ -1043,6 +1252,11 @@ export default function App() {
                       </p>
                     </div>
                   </div>
+
+                  {/* Anti-AI Quiz Integrity Audit Report */}
+                  {scoreResult?.integrity && (
+                    <SubmissionIntegrityCard integrity={scoreResult.integrity} />
+                  )}
 
                   {/* Previous-Attempt Analysis Card */}
                   {aiTutorAttemptAnalysis && (
@@ -1165,12 +1379,20 @@ export default function App() {
                 </div>
               )}
 
-            </div>
+              </div>
+            </ProtectedRoute>
           )}
 
           {/* DASHBOARD */}
           {activeTab === 'Dashboard' && (
-            <div className="space-y-6 max-w-5xl mx-auto">
+            <ProtectedRoute
+              resourceName="Learning Dashboard & Analytics"
+              onRequireAuth={() => {
+                setAuthModalMode('login');
+                setIsAuthModalOpen(true);
+              }}
+            >
+              <div className="space-y-6 max-w-5xl mx-auto">
               
               {/* Row 1: Academic Metric Overview Cards */}
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
@@ -1433,7 +1655,7 @@ export default function App() {
                           type="button"
                           onClick={() => {
                             setActiveTab('Quizzes');
-                            handleStartPracticeQuiz(sec.id, sec.title);
+                            handleTriggerPracticeQuizPreCheck(sec.id, sec.title);
                           }}
                           className="w-full mt-2 bg-white hover:bg-slate-100 border border-slate-200 text-indigo-700 font-semibold py-1.5 rounded-lg text-xs transition"
                         >
@@ -1602,6 +1824,7 @@ export default function App() {
                 </div>
               )}
             </div>
+            </ProtectedRoute>
           )}
 
           {/* MATERIALS */}
@@ -1651,7 +1874,7 @@ export default function App() {
                             type="button"
                             onClick={() => {
                               setActiveTab('Quizzes');
-                              handleStartPracticeQuiz(sec.id, sec.title);
+                              handleTriggerPracticeQuizPreCheck(sec.id, sec.title);
                             }}
                             className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 py-1.5 rounded-lg transition"
                           >
@@ -1702,7 +1925,14 @@ export default function App() {
 
           {/* QUIZZES (Self-Contained Portal) */}
           {activeTab === 'Quizzes' && (
-            <div className="space-y-6 max-w-5xl mx-auto">
+            <ProtectedRoute
+              resourceName="Practice Quizzes & Assessments"
+              onRequireAuth={() => {
+                setAuthModalMode('login');
+                setIsAuthModalOpen(true);
+              }}
+            >
+              <div className="space-y-6 max-w-5xl mx-auto">
               
               {/* View 1: Quiz Selection Menu */}
               {!activePracticeQuiz && (
@@ -1724,7 +1954,7 @@ export default function App() {
                           <p className="text-xs text-slate-500">{sec.summary}</p>
                         </div>
                         <button 
-                          onClick={() => handleStartPracticeQuiz(sec.id, sec.title)}
+                          onClick={() => handleTriggerPracticeQuizPreCheck(sec.id, sec.title)}
                           disabled={loadingPracticeQuiz}
                           className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white px-5 py-2.5 rounded-xl text-xs font-semibold shrink-0 transition shadow-sm"
                         >
@@ -1738,7 +1968,14 @@ export default function App() {
 
               {/* View 2: Active Quiz Questions */}
               {activePracticeQuiz && !practiceResult && (
-                <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-5">
+                <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-5 quiz-lockdown-shield select-none">
+                  <QuizLockdownHUD
+                    intensityLevel={lockdownIntensity}
+                    violationsCount={integrity.violationsCount}
+                    maxViolations={3}
+                    isFullscreen={integrity.isFullscreen}
+                    onRequestFullscreen={integrity.requestFullscreen}
+                  />
                   <div className="flex items-center justify-between border-b pb-3 border-slate-100">
                     <div>
                       <div className="flex items-center space-x-2 mb-1">
@@ -1821,6 +2058,11 @@ export default function App() {
                       </p>
                     </div>
                   </div>
+
+                  {/* Anti-AI Quiz Integrity Audit Report */}
+                  {practiceResult?.integrity && (
+                    <SubmissionIntegrityCard integrity={practiceResult.integrity} />
+                  )}
 
                   {/* Previous-Attempt Analysis Card */}
                   {practiceAttemptAnalysis && (
@@ -1966,12 +2208,20 @@ export default function App() {
                 </div>
               )}
 
-            </div>
+              </div>
+            </ProtectedRoute>
           )}
 
           {/* STUDY PLANS */}
           {activeTab === 'Study Plans' && (
-            <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-5">
+            <ProtectedRoute
+              resourceName="Customized Study Plans"
+              onRequireAuth={() => {
+                setAuthModalMode('login');
+                setIsAuthModalOpen(true);
+              }}
+            >
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-5">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4 border-slate-100">
                 <div>
                   <h3 className="text-base font-bold text-slate-900">Saved Study Plans & Activity Tracking</h3>
@@ -2177,6 +2427,7 @@ export default function App() {
                 </div>
               )}
             </div>
+            </ProtectedRoute>
           )}
 
         </main>
@@ -2251,6 +2502,49 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* PRE-QUIZ LOCKDOWN INSTRUCTIONS MODAL */}
+      <PreQuizLockdownModal
+        isOpen={preQuizModal.isOpen}
+        onStartQuiz={preQuizModal.onStart}
+        onCancel={() => setPreQuizModal({ isOpen: false, topicTitle: '', onStart: null })}
+        intensityLevel={lockdownIntensity}
+        setIntensityLevel={setLockdownIntensity}
+        topicTitle={preQuizModal.topicTitle}
+      />
+
+      {/* FULLSCREEN EXIT WARNING OVERLAY */}
+      <FullscreenWarningOverlay
+        isOpen={integrity.isFullscreenWarningOpen}
+        onResumeFullscreen={integrity.requestFullscreen}
+      />
+
+      {/* FOCUS LOST / TAB SWITCH WARNING MODAL */}
+      <FocusLostWarningModal
+        isOpen={integrity.warningModal.isOpen}
+        title={integrity.warningModal.title}
+        message={integrity.warningModal.message}
+        timeAway={integrity.warningModal.timeAway}
+        strikes={integrity.warningModal.strikes}
+        maxViolations={3}
+        onDismiss={integrity.dismissWarningModal}
+      />
+
+      {/* LOCKOUT OVERLAY */}
+      <LockedOutOverlay
+        isOpen={integrity.isLockedOut}
+        violationsCount={integrity.violationsCount}
+      />
+
+      {/* FLOATING ACTION TOAST */}
+      <IntegrityToast message={integrity.toastMessage} />
+
+      {/* AUTHENTICATION MODAL */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialMode={authModalMode}
+      />
 
     </div>
   );

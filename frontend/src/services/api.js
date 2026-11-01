@@ -10,7 +10,7 @@ const API_BASE =
     : 'https://study-support-1.onrender.com');
 
 /**
- * Generic fetch wrapper with JSON error handling
+ * Generic fetch wrapper with JSON error handling and credentials support (HttpOnly cookies)
  */
 async function request(endpoint, options = {}) {
   const url = `${API_BASE}${endpoint}`;
@@ -19,7 +19,12 @@ async function request(endpoint, options = {}) {
     ...(options.headers || {})
   };
 
-  const response = await fetch(url, { ...options, headers });
+  const response = await fetch(url, {
+    credentials: 'include',
+    ...options,
+    headers
+  });
+
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
@@ -31,6 +36,43 @@ async function request(endpoint, options = {}) {
   }
 
   return data;
+}
+
+// Authentication API
+export async function loginApi(credentials) {
+  return request('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify(credentials)
+  });
+}
+
+export async function registerApi(userData) {
+  return request('/auth/register', {
+    method: 'POST',
+    body: JSON.stringify(userData)
+  });
+}
+
+export async function logoutApi() {
+  return request('/auth/logout', {
+    method: 'POST'
+  });
+}
+
+export async function getCurrentUser() {
+  return request('/auth/me');
+}
+
+// Quiz Integrity & Telemetry API
+export async function logQuizViolation(attemptId, violationData) {
+  return request(`/api/quizzes/${encodeURIComponent(attemptId)}/log-event`, {
+    method: 'POST',
+    body: JSON.stringify(violationData)
+  });
+}
+
+export async function getQuizIntegrityReport(attemptId) {
+  return request(`/api/quizzes/${encodeURIComponent(attemptId)}/violations`);
 }
 
 // Tool 1: Material Search
@@ -48,7 +90,6 @@ export async function promptAgent(topic) {
 
 // Tool 2: Knowledge Assessment Evaluation (Application code scoring)
 export async function evaluateAssessment(payload) {
-  // Try /api/assess first (compatible with both deployed Render and local), fallback to /api/assessment/evaluate
   try {
     return await request('/api/assess', {
       method: 'POST',
@@ -78,8 +119,7 @@ export async function getStudyPlans() {
   try {
     return await request('/api/study-plans');
   } catch (err) {
-    // If Render hasn't redeployed the latest GET endpoint yet, return empty list gracefully
-    if (err.status === 404) {
+    if (err.status === 404 || err.status === 401) {
       return [];
     }
     throw err;
