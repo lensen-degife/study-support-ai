@@ -95,17 +95,17 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onAu
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/75 backdrop-blur-sm animate-fadeIn"
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-modal-title"
     >
-      <div className="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden flex flex-col text-slate-100">
+      <div className="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-md shadow-2xl overflow-y-auto max-h-[92dvh] flex flex-col text-slate-100">
         
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/80">
+        <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-slate-800 bg-slate-900/80 sticky top-0 z-10 backdrop-blur-md">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white text-base shadow-sm">
+            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white text-base shadow-sm shrink-0">
               🎓
             </div>
             <div>
@@ -120,7 +120,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onAu
           {onClose && (
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-white p-1 rounded-lg text-lg transition focus:outline-none"
+              className="text-slate-400 hover:text-white p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-lg transition focus:outline-none"
               aria-label="Close dialog"
             >
               ✕
@@ -129,7 +129,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onAu
         </div>
 
         {/* Tab switch */}
-        <div className="grid grid-cols-2 p-1.5 mx-6 mt-4 bg-slate-800/80 rounded-xl border border-slate-700/50">
+        <div className="grid grid-cols-2 p-1.5 mx-4 sm:mx-6 mt-4 bg-slate-800/80 rounded-xl border border-slate-700/50 shrink-0">
           <button
             type="button"
             onClick={() => {
@@ -137,7 +137,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onAu
               setClientError('');
               clearError();
             }}
-            className={`py-2 text-xs font-bold rounded-lg transition-all ${
+            className={`py-2.5 min-h-[44px] flex items-center justify-center text-xs font-bold rounded-lg transition-all ${
               mode === 'login'
                 ? 'bg-indigo-600 text-white shadow-sm'
                 : 'text-slate-400 hover:text-white hover:bg-slate-800'
@@ -152,7 +152,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onAu
               setClientError('');
               clearError();
             }}
-            className={`py-2 text-xs font-bold rounded-lg transition-all ${
+            className={`py-2.5 min-h-[44px] flex items-center justify-center text-xs font-bold rounded-lg transition-all ${
               mode === 'register'
                 ? 'bg-indigo-600 text-white shadow-sm'
                 : 'text-slate-400 hover:text-white hover:bg-slate-800'
@@ -164,16 +164,16 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onAu
 
         {/* Error Alert */}
         {(clientError || authError) && (
-          <div className="mx-6 mt-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-start space-x-2">
+          <div className="mx-4 sm:mx-6 mt-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-start space-x-2 shrink-0">
             <span className="text-sm">⚠️</span>
-            <div className="flex-1 font-medium leading-relaxed">
+            <div className="flex-1 font-medium leading-relaxed break-words-safe">
               {clientError || authError}
             </div>
           </div>
         )}
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4">
           
           {mode === 'register' && (
             <div>
@@ -186,7 +186,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onAu
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Jordan Lee"
-                className="w-full px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+                className="w-full min-h-[44px] px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
               />
             </div>
           )}
@@ -201,7 +201,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onAu
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="e.g. jordan.lee@university.edu"
-              className="w-full px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+              className="w-full min-h-[44px] px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
             />
           </div>
 
@@ -213,7 +213,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onAu
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-[11px] text-indigo-400 hover:text-indigo-300 font-medium"
+                className="text-[11px] text-indigo-400 hover:text-indigo-300 font-medium py-1 px-1.5"
               >
                 {showPassword ? 'Hide' : 'Show'}
               </button>
@@ -224,14 +224,14 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onAu
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+              className="w-full min-h-[44px] px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
             />
 
             {/* Password Complexity Checklist for Register mode */}
             {mode === 'register' && (
               <div className="mt-2.5 p-2.5 bg-slate-800/60 rounded-xl border border-slate-800 text-[11px] space-y-1">
                 <p className="font-semibold text-slate-300">Password requirements:</p>
-                <div className="grid grid-cols-2 gap-1 text-[10px]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[10px]">
                   <span className={pwdChecks.length ? 'text-emerald-400 font-medium' : 'text-slate-500'}>
                     {pwdChecks.length ? '✓' : '○'} Min 8 characters
                   </span>
@@ -261,7 +261,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onAu
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+                  className="w-full min-h-[44px] px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
                 />
               </div>
 
@@ -273,7 +273,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onAu
                   <button
                     type="button"
                     onClick={() => setRole('student')}
-                    className={`py-2 px-3 rounded-xl border text-xs font-medium text-center transition ${
+                    className={`min-h-[44px] py-2 px-3 rounded-xl border text-xs font-medium text-center transition flex items-center justify-center ${
                       role === 'student'
                         ? 'border-indigo-500 bg-indigo-500/20 text-indigo-300 font-bold'
                         : 'border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600'
@@ -284,7 +284,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onAu
                   <button
                     type="button"
                     onClick={() => setRole('tutor')}
-                    className={`py-2 px-3 rounded-xl border text-xs font-medium text-center transition ${
+                    className={`min-h-[44px] py-2 px-3 rounded-xl border text-xs font-medium text-center transition flex items-center justify-center ${
                       role === 'tutor'
                         ? 'border-indigo-500 bg-indigo-500/20 text-indigo-300 font-bold'
                         : 'border-slate-700 bg-slate-800 text-slate-400 hover:border-slate-600'
@@ -300,7 +300,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onAu
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 disabled:opacity-50 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center justify-center space-x-2 mt-2"
+            className="w-full min-h-[44px] py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 disabled:opacity-50 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center justify-center space-x-2 mt-2"
           >
             {isSubmitting ? (
               <>
@@ -317,7 +317,7 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onAu
         </form>
 
         {/* Demo Fast-Fill helper */}
-        <div className="px-6 pb-6 pt-2 border-t border-slate-800 bg-slate-900/50">
+        <div className="px-4 sm:px-6 pb-6 pt-2 border-t border-slate-800 bg-slate-900/50">
           <p className="text-[11px] text-slate-400 mb-2 font-medium flex items-center space-x-1">
             <span>⚡ Quick Demo Credentials:</span>
           </p>
@@ -325,21 +325,21 @@ export default function AuthModal({ isOpen, onClose, initialMode = 'login', onAu
             <button
               type="button"
               onClick={() => fillDemoAccount('jordan.lee@university.edu', 'student')}
-              className="text-[10px] bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-2.5 py-1 rounded-lg transition"
+              className="text-[10px] min-h-[38px] flex items-center bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1 rounded-lg transition"
             >
               Student (Jordan Lee)
             </button>
             <button
               type="button"
               onClick={() => fillDemoAccount('tutor@university.edu', 'tutor')}
-              className="text-[10px] bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-2.5 py-1 rounded-lg transition"
+              className="text-[10px] min-h-[38px] flex items-center bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1 rounded-lg transition"
             >
               Tutor (Dr. Turing)
             </button>
             <button
               type="button"
               onClick={() => fillDemoAccount('admin@university.edu', 'admin')}
-              className="text-[10px] bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-2.5 py-1 rounded-lg transition"
+              className="text-[10px] min-h-[38px] flex items-center bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3 py-1 rounded-lg transition"
             >
               Admin
             </button>

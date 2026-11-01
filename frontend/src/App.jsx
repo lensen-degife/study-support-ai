@@ -767,15 +767,15 @@ export default function App() {
       {/* MOBILE BACKDROP OVERLAY */}
       {isMobileMenuOpen && (
         <div 
-          className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-40 md:hidden transition-opacity"
+          className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs z-40 lg:hidden transition-opacity"
           onClick={() => setIsMobileMenuOpen(false)}
           aria-label="Close navigation overlay"
         />
       )}
 
       {/* SIDEBAR NAVIGATION */}
-      <aside className={`fixed md:static inset-y-0 left-0 z-50 w-72 md:w-64 bg-slate-900 text-white flex flex-col justify-between p-4 shadow-2xl md:shadow-xl shrink-0 transition-transform duration-300 ease-in-out ${
-        isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+      <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-72 lg:w-64 bg-slate-900 text-white flex flex-col justify-between p-4 shadow-2xl lg:shadow-xl shrink-0 transition-transform duration-300 ease-in-out ${
+        isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       }`}>
         <div>
           <div className="flex items-center justify-between px-3 py-4 mb-4 border-b border-slate-800">
@@ -788,7 +788,7 @@ export default function App() {
             </div>
             <button 
               onClick={() => setIsMobileMenuOpen(false)} 
-              className="md:hidden text-slate-400 hover:text-white p-1 rounded-lg text-lg focus:outline-none"
+              className="lg:hidden text-slate-400 hover:text-white p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg text-lg focus:outline-none"
               aria-label="Close navigation"
             >
               ✕
@@ -803,7 +803,7 @@ export default function App() {
                   setActiveTab(item.name);
                   setIsMobileMenuOpen(false);
                 }}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition ${
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 min-h-[44px] rounded-xl text-xs font-semibold transition ${
                   activeTab === item.name 
                     ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' 
                     : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'
@@ -854,7 +854,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={logout}
-                className="w-full py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-medium border border-slate-700/60 transition flex items-center justify-center space-x-1"
+                className="w-full min-h-[44px] py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-medium border border-slate-700/60 transition flex items-center justify-center space-x-1"
               >
                 <span>Sign Out</span>
               </button>
@@ -877,7 +877,7 @@ export default function App() {
                     setAuthModalMode('login');
                     setIsAuthModalOpen(true);
                   }}
-                  className="py-1.5 px-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-[11px] font-bold transition text-center shadow-sm"
+                  className="min-h-[44px] py-2 px-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-[11px] font-bold transition flex items-center justify-center text-center shadow-sm"
                 >
                   Sign In
                 </button>
@@ -887,7 +887,7 @@ export default function App() {
                     setAuthModalMode('register');
                     setIsAuthModalOpen(true);
                   }}
-                  className="py-1.5 px-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-[11px] font-bold transition text-center"
+                  className="min-h-[44px] py-2 px-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-[11px] font-bold transition flex items-center justify-center text-center"
                 >
                   Register
                 </button>
@@ -901,11 +901,11 @@ export default function App() {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         
         {/* Header */}
-        <header className="bg-white border-b border-slate-200 px-4 py-3 sm:px-6 md:px-8 sm:py-4 flex items-center justify-between shadow-xs gap-3">
-          <div className="flex items-center space-x-3 min-w-0">
+        <header className="bg-white border-b border-slate-200 px-3.5 py-2.5 sm:px-6 md:px-8 sm:py-3.5 flex items-center justify-between shadow-xs gap-2 sm:gap-3">
+          <div className="flex items-center space-x-2.5 sm:space-x-3 min-w-0">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="md:hidden p-2 -ml-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg focus:outline-none shrink-0"
+              className="lg:hidden p-2 -ml-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl focus:outline-none shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Open sidebar menu"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -927,7 +927,7 @@ export default function App() {
             ) : (
               <span className="text-[10px] sm:text-xs px-2.5 py-1 bg-slate-200 text-slate-700 rounded-full font-medium whitespace-nowrap flex items-center space-x-1.5">
                 <span className="w-2 h-2 rounded-full bg-slate-400"></span>
-                <span>Connecting...</span>
+                <span className="hidden min-[380px]:inline">Connecting...</span>
               </span>
             )}
 
@@ -955,17 +955,17 @@ export default function App() {
             </div>
 
             {isAuthenticated && user ? (
-              <div className="flex items-center space-x-2 pl-2 border-l border-slate-200">
+              <div className="flex items-center space-x-1.5 sm:space-x-2 pl-2 border-l border-slate-200">
                 <span className="hidden sm:inline-block text-xs font-semibold text-slate-700 max-w-[120px] truncate">
                   {user.name}
                 </span>
-                <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md border border-indigo-100">
+                <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 bg-indigo-50 text-indigo-700 rounded-md border border-indigo-100">
                   {user.role}
                 </span>
                 <button
                   type="button"
                   onClick={logout}
-                  className="text-xs text-slate-500 hover:text-slate-800 font-medium px-2 py-1 rounded hover:bg-slate-100 transition"
+                  className="text-xs text-slate-500 hover:text-slate-800 font-medium px-2 py-1.5 min-h-[40px] sm:min-h-[44px] flex items-center rounded-lg hover:bg-slate-100 transition"
                 >
                   Sign Out
                 </button>
@@ -977,7 +977,7 @@ export default function App() {
                   setAuthModalMode('login');
                   setIsAuthModalOpen(true);
                 }}
-                className="text-xs font-bold px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition shadow-xs"
+                className="text-xs font-bold px-3 py-1.5 min-h-[40px] sm:min-h-[44px] flex items-center bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition shadow-xs"
               >
                 Sign In
               </button>
@@ -985,7 +985,7 @@ export default function App() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-3.5 sm:p-6 lg:p-8">
 
           {/* WELCOME PAGE */}
           {activeTab === 'Welcome' && (
@@ -995,32 +995,32 @@ export default function App() {
                   <span className="inline-block bg-indigo-500/30 text-indigo-200 text-[10px] font-bold px-3 py-1 rounded-md uppercase tracking-wider">
                     Academic Support Active
                   </span>
-                  <h3 className="text-xl sm:text-2xl font-black">Hello, {user ? user.name : 'Student'}!</h3>
-                  <p className="text-xs text-indigo-100 max-w-lg leading-relaxed">
+                  <h3 className="text-xl sm:text-2xl font-black break-words-safe">Hello, {user ? user.name : 'Student'}!</h3>
+                  <p className="text-xs text-indigo-100 max-w-lg leading-relaxed break-words-safe">
                     Your AI Study Support Tutor assesses your understanding of Python programming topics, evaluates quizzes with instant feedback, and formulates tailored study plans.
                   </p>
                   <button 
                     onClick={() => setActiveTab('AI Tutor')}
-                    className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-indigo-50 px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-md"
+                    className="w-full sm:w-auto min-h-[44px] bg-white text-indigo-900 hover:bg-indigo-50 px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-md flex items-center justify-center"
                   >
                     Start Topic Assessment ➔
                   </button>
                 </div>
-                <div className="w-24 h-24 md:w-36 md:h-36 bg-indigo-700/50 rounded-2xl border border-indigo-400/40 flex items-center justify-center text-4xl shadow-lg shrink-0">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-36 md:h-36 bg-indigo-700/50 rounded-2xl border border-indigo-400/40 flex items-center justify-center text-3xl sm:text-4xl shadow-lg shrink-0">
                   🐍
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between space-y-3">
                   <div className="space-y-2">
                     <div className="text-indigo-600 text-xl font-bold">📄 Course Syllabus</div>
                     <h4 className="font-bold text-sm text-slate-900">Explore Materials</h4>
-                    <p className="text-xs text-slate-500">Read Python course modules, review key concepts, and inspect syntax notes.</p>
+                    <p className="text-xs text-slate-500 break-words-safe">Read Python course modules, review key concepts, and inspect syntax notes.</p>
                   </div>
                   <button 
                     onClick={() => setActiveTab('Materials')}
-                    className="w-full bg-slate-50 hover:bg-slate-100 text-indigo-700 font-semibold py-2 rounded-xl text-xs transition border border-slate-200"
+                    className="w-full min-h-[44px] bg-slate-50 hover:bg-slate-100 text-indigo-700 font-semibold py-2.5 px-3 rounded-xl text-xs transition border border-slate-200 flex items-center justify-center"
                   >
                     Open Materials ➔
                   </button>
@@ -1029,24 +1029,24 @@ export default function App() {
                   <div className="space-y-2">
                     <div className="text-indigo-600 text-xl font-bold">📝 Practice Quizzes</div>
                     <h4 className="font-bold text-sm text-slate-900">Test Understanding</h4>
-                    <p className="text-xs text-slate-500">Take 3-question module multiple-choice quizzes with deterministic scoring.</p>
+                    <p className="text-xs text-slate-500 break-words-safe">Take 3-question module multiple-choice quizzes with deterministic scoring.</p>
                   </div>
                   <button 
                     onClick={() => setActiveTab('Quizzes')}
-                    className="w-full bg-slate-50 hover:bg-slate-100 text-indigo-700 font-semibold py-2 rounded-xl text-xs transition border border-slate-200"
+                    className="w-full min-h-[44px] bg-slate-50 hover:bg-slate-100 text-indigo-700 font-semibold py-2.5 px-3 rounded-xl text-xs transition border border-slate-200 flex items-center justify-center"
                   >
                     Start Quizzes ➔
                   </button>
                 </div>
-                <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between space-y-3 sm:col-span-2 md:col-span-1">
+                <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between space-y-3 md:col-span-2 lg:col-span-1">
                   <div className="space-y-2">
                     <div className="text-indigo-600 text-xl font-bold">🎯 Tailored Plans</div>
                     <h4 className="font-bold text-sm text-slate-900">Saved Study Plans</h4>
-                    <p className="text-xs text-slate-500">Reopen confirmed mastery or remedial study activities saved to your profile.</p>
+                    <p className="text-xs text-slate-500 break-words-safe">Reopen confirmed mastery or remedial study activities saved to your profile.</p>
                   </div>
                   <button 
                     onClick={() => setActiveTab('Study Plans')}
-                    className="w-full bg-slate-50 hover:bg-slate-100 text-indigo-700 font-semibold py-2 rounded-xl text-xs transition border border-slate-200"
+                    className="w-full min-h-[44px] bg-slate-50 hover:bg-slate-100 text-indigo-700 font-semibold py-2.5 px-3 rounded-xl text-xs transition border border-slate-200 flex items-center justify-center"
                   >
                     View Saved Plans ➔
                   </button>
@@ -1078,12 +1078,12 @@ export default function App() {
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
                     placeholder="e.g., Python list mutability and tuples, Functions, OOP classes" 
-                    className="w-full flex-1 px-4 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white"
+                    className="w-full flex-1 min-h-[44px] px-4 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-white"
                   />
                   <button 
                     type="submit" 
                     disabled={isSearching}
-                    className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition shadow-md shrink-0"
+                    className="w-full sm:w-auto min-h-[44px] bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition shadow-md shrink-0 flex items-center justify-center"
                   >
                     {isSearching ? "Searching..." : "Search Topic"}
                   </button>
@@ -1096,7 +1096,7 @@ export default function App() {
                       <span className="shrink-0 text-base">💡</span>
                       <div>
                         <p className="font-bold mb-1">Clarification Requested:</p>
-                        <p>{clarificationPrompt}</p>
+                        <p className="break-words-safe">{clarificationPrompt}</p>
                       </div>
                     </div>
                     {clarificationOptions.length > 0 && (
@@ -1109,7 +1109,7 @@ export default function App() {
                               setTopic(opt.title);
                               handleSearch(null, opt.title);
                             }}
-                            className="bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-xs"
+                            className="bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 px-3 py-2 min-h-[40px] flex items-center rounded-lg text-xs font-semibold transition shadow-xs"
                           >
                             Section {opt.number}: {opt.title}
                           </button>
@@ -1125,7 +1125,7 @@ export default function App() {
                     <span className="shrink-0 text-base">⚠️</span>
                     <div>
                       <p className="font-bold mb-1">Topic Outside Syllabus:</p>
-                      <p>{scopeWarning}</p>
+                      <p className="break-words-safe">{scopeWarning}</p>
                     </div>
                   </div>
                 )}
@@ -1195,7 +1195,7 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {quizData.map((q, idx) => (
                       <div key={q.id} className="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-col justify-between">
                         <div>
@@ -1203,10 +1203,10 @@ export default function App() {
                             <span className="text-[10px] font-bold text-indigo-600 font-mono">{q.sectionRef}</span>
                             <span className="text-[10px] text-slate-400">Q{idx + 1}</span>
                           </div>
-                          <p className="font-semibold text-xs text-slate-900 mb-3">{q.question}</p>
+                          <p className="font-semibold text-xs text-slate-900 mb-3 break-words-safe">{q.question}</p>
                           <div className="space-y-2">
                             {q.options.map((opt, oIdx) => (
-                              <label key={oIdx} className="flex items-start space-x-2.5 text-xs cursor-pointer p-2.5 rounded-lg hover:bg-slate-100 active:bg-slate-200 transition select-none border border-slate-100 bg-white">
+                              <label key={oIdx} className="flex items-start space-x-2.5 text-xs cursor-pointer p-3 min-h-[44px] rounded-lg hover:bg-slate-100 active:bg-slate-200 transition select-none border border-slate-100 bg-white">
                                 <input 
                                   type="radio" 
                                   name={`question_${q.id}`} 
@@ -1214,7 +1214,7 @@ export default function App() {
                                   onChange={() => handleOptionSelect(q.id, opt)}
                                   className="mt-0.5 w-4 h-4 text-indigo-600 focus:ring-indigo-600 shrink-0"
                                 />
-                                <span className="leading-snug text-slate-800">{opt}</span>
+                                <span className="leading-snug text-slate-800 break-words-safe">{opt}</span>
                               </label>
                             ))}
                           </div>
@@ -1226,7 +1226,7 @@ export default function App() {
                   <button 
                     onClick={handleSubmitQuiz} 
                     disabled={isEvaluating}
-                    className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white py-3 rounded-xl text-sm font-semibold transition shadow-md"
+                    className="w-full min-h-[44px] bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white py-3 px-4 rounded-xl text-sm font-semibold transition shadow-md flex items-center justify-center"
                   >
                     {isEvaluating ? "Evaluating Assessment..." : "Submit Quiz & Calculate Results"}
                   </button>
@@ -1319,7 +1319,7 @@ export default function App() {
                       <span className="text-[11px] text-slate-500 font-medium">Click checkbox to mark activities complete</span>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {studyPlan.map((act, i) => {
                         const isDone = !!completedActivities[`active_${i}`];
                         return (
@@ -1340,16 +1340,16 @@ export default function App() {
                                   </span>
                                 )}
                               </div>
-                              <p className={`font-bold text-xs ${isDone ? 'text-slate-500 line-through' : 'text-slate-900'}`}>
+                              <p className={`font-bold text-xs break-words-safe ${isDone ? 'text-slate-500 line-through' : 'text-slate-900'}`}>
                                 {act.title}
                               </p>
-                              <p className="text-[11px] text-slate-600 leading-relaxed">{act.description}</p>
+                              <p className="text-[11px] text-slate-600 leading-relaxed break-words-safe">{act.description}</p>
                             </div>
 
                             <button
                               type="button"
                               onClick={() => toggleActivityCompletion('active', i, act)}
-                              className={`w-full py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center space-x-1.5 transition ${
+                              className={`w-full min-h-[44px] py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5 transition ${
                                 isDone 
                                   ? 'bg-emerald-600 hover:bg-emerald-700 text-white' 
                                   : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-300'
@@ -1365,13 +1365,13 @@ export default function App() {
 
                   {/* Confirmation Gate before DB write */}
                   <div className="pt-2 flex flex-col sm:flex-row justify-between items-center gap-3 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
-                    <p className="text-xs text-slate-600">
+                    <p className="text-xs text-slate-600 break-words-safe">
                       Save this tailored study plan to your profile to track your academic progress.
                     </p>
                     <button 
                       onClick={handleSavePlan} 
                       disabled={isSavingPlan}
-                      className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white px-6 py-2.5 rounded-xl text-xs font-bold transition shadow-md shrink-0"
+                      className="w-full sm:w-auto min-h-[44px] bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white px-6 py-2.5 rounded-xl text-xs font-bold transition shadow-md shrink-0 flex items-center justify-center"
                     >
                       {isSavingPlan ? "Saving Study Plan..." : "Save Study Plan ➔"}
                     </button>
@@ -1395,7 +1395,7 @@ export default function App() {
               <div className="space-y-6 max-w-5xl mx-auto">
               
               {/* Row 1: Academic Metric Overview Cards */}
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+              <div className="grid grid-cols-1 min-[440px]:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs flex flex-col justify-between">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Avg Score</span>
@@ -1442,7 +1442,7 @@ export default function App() {
               </div>
 
               {/* Row 2: SVG Score Trajectory & Progress Chart */}
-              <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
                   <div>
                     <div className="flex items-center space-x-2">
@@ -1451,7 +1451,7 @@ export default function App() {
                     </div>
                     <p className="text-xs text-slate-500">Chronological trajectory of quiz scores across recent attempts against the pass threshold.</p>
                   </div>
-                  <div className="flex items-center space-x-3 text-[11px]">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[11px]">
                     <span className="flex items-center space-x-1">
                       <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
                       <span className="text-slate-600 font-medium">Passed (2-3)</span>
@@ -1478,7 +1478,7 @@ export default function App() {
                     </button>
                   </div>
                 ) : (
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto scroll-touch w-full">
                     {(() => {
                       const chartAttempts = [...quizAttempts].slice(0, 8).reverse();
                       const svgWidth = 560;
@@ -1505,8 +1505,8 @@ export default function App() {
                         : '';
 
                       return (
-                        <div className="min-w-[480px]">
-                          <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} className="w-full h-auto select-none">
+                        <div className="w-full min-w-0">
+                          <svg viewBox={`0 0 ${svgWidth} ${svgHeight}`} className="w-full max-w-full h-auto select-none">
                             <defs>
                               <linearGradient id="scoreTrendGradient" x1="0" y1="0" x2="0" y2="1">
                                 <stop offset="0%" stopColor="#6366f1" stopOpacity="0.25" />
@@ -1620,7 +1620,7 @@ export default function App() {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {analytics.sectionStats.map((sec) => (
                     <div key={sec.id} className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-col justify-between space-y-3">
                       <div className="space-y-1.5">
@@ -1630,8 +1630,8 @@ export default function App() {
                             {sec.status}
                           </span>
                         </div>
-                        <h4 className="font-bold text-xs text-slate-900 leading-snug">{sec.title}</h4>
-                        <p className="text-[11px] text-slate-500">
+                        <h4 className="font-bold text-xs text-slate-900 leading-snug break-words-safe">{sec.title}</h4>
+                        <p className="text-[11px] text-slate-500 break-words-safe">
                           {sec.attemptsCount > 0 
                             ? `Best: ${sec.bestScore}/3 • ${sec.attemptsCount} attempt${sec.attemptsCount > 1 ? 's' : ''}` 
                             : 'No quiz attempts recorded'}
@@ -1657,7 +1657,7 @@ export default function App() {
                             setActiveTab('Quizzes');
                             handleTriggerPracticeQuizPreCheck(sec.id, sec.title);
                           }}
-                          className="w-full mt-2 bg-white hover:bg-slate-100 border border-slate-200 text-indigo-700 font-semibold py-1.5 rounded-lg text-xs transition"
+                          className="w-full mt-2 min-h-[44px] bg-white hover:bg-slate-100 border border-slate-200 text-indigo-700 font-semibold py-2 px-3 rounded-xl text-xs transition flex items-center justify-center"
                         >
                           Practice Module Quiz ➔
                         </button>
@@ -1668,7 +1668,7 @@ export default function App() {
               </div>
 
               {/* Row 4: Previous-Attempt History Table */}
-              <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-3">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                   <div>
                     <h3 className="font-bold text-sm sm:text-base text-slate-900">Previous-Attempt History & Comparative Logs</h3>
@@ -1682,10 +1682,10 @@ export default function App() {
                 {quizAttempts.length === 0 ? (
                   <p className="text-xs text-slate-400 py-3 text-center">No attempt history recorded yet.</p>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs">
+                  <div className="overflow-x-auto scroll-touch rounded-xl border border-slate-100">
+                    <table className="w-full text-left text-xs whitespace-nowrap min-w-[500px]">
                       <thead>
-                        <tr className="border-b border-slate-200 text-slate-400 uppercase tracking-wider text-[10px]">
+                        <tr className="border-b border-slate-200 text-slate-400 uppercase tracking-wider text-[10px] bg-slate-50/60">
                           <th className="py-2.5 px-3">Date / Time</th>
                           <th className="py-2.5 px-3">Topic / Module</th>
                           <th className="py-2.5 px-3">Score</th>
@@ -1740,65 +1740,65 @@ export default function App() {
               </div>
 
               {/* Row 5: Dedicated Task Navigation Portals */}
-              <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 space-y-4 shadow-xs">
+              <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 space-y-4 shadow-xs">
                 <div>
                   <h3 className="font-bold text-sm text-slate-900">Learning Portals & Quick Actions</h3>
                   <p className="text-xs text-slate-500">Select any section to launch its dedicated workflow.</p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-4 gap-3">
                   <button 
                     onClick={() => setActiveTab('AI Tutor')} 
-                    className="p-4 bg-indigo-50/70 hover:bg-indigo-100/70 border border-indigo-100 rounded-2xl text-left transition space-y-1.5 flex flex-col justify-between"
+                    className="p-4 min-h-[44px] bg-indigo-50/70 hover:bg-indigo-100/70 border border-indigo-100 rounded-2xl text-left transition space-y-1.5 flex flex-col justify-between"
                   >
                     <div>
                       <span className="text-xl">🤖</span>
                       <p className="font-bold text-xs text-indigo-950 mt-1">AI Study Tutor</p>
-                      <p className="text-[11px] text-slate-600 leading-snug">Ask any Python topic and generate custom quizzes.</p>
+                      <p className="text-[11px] text-slate-600 leading-snug break-words-safe">Ask any Python topic and generate custom quizzes.</p>
                     </div>
-                    <span className="text-[11px] text-indigo-600 font-bold">Open Tutor ➔</span>
+                    <span className="text-[11px] text-indigo-600 font-bold mt-2">Open Tutor ➔</span>
                   </button>
 
                   <button 
                     onClick={() => setActiveTab('Quizzes')} 
-                    className="p-4 bg-emerald-50/70 hover:bg-emerald-100/70 border border-emerald-100 rounded-2xl text-left transition space-y-1.5 flex flex-col justify-between"
+                    className="p-4 min-h-[44px] bg-emerald-50/70 hover:bg-emerald-100/70 border border-emerald-100 rounded-2xl text-left transition space-y-1.5 flex flex-col justify-between"
                   >
                     <div>
                       <span className="text-xl">📝</span>
                       <p className="font-bold text-xs text-emerald-950 mt-1">Practice Quizzes</p>
-                      <p className="text-[11px] text-slate-600 leading-snug">Take 3-question MCQ assessments right in Quizzes.</p>
+                      <p className="text-[11px] text-slate-600 leading-snug break-words-safe">Take 3-question MCQ assessments right in Quizzes.</p>
                     </div>
-                    <span className="text-[11px] text-emerald-700 font-bold">Take Quiz ➔</span>
+                    <span className="text-[11px] text-emerald-700 font-bold mt-2">Take Quiz ➔</span>
                   </button>
 
                   <button 
                     onClick={() => setActiveTab('Materials')} 
-                    className="p-4 bg-sky-50/70 hover:bg-sky-100/70 border border-sky-100 rounded-2xl text-left transition space-y-1.5 flex flex-col justify-between"
+                    className="p-4 min-h-[44px] bg-sky-50/70 hover:bg-sky-100/70 border border-sky-100 rounded-2xl text-left transition space-y-1.5 flex flex-col justify-between"
                   >
                     <div>
                       <span className="text-xl">📚</span>
                       <p className="font-bold text-xs text-sky-950 mt-1">Course Syllabus</p>
-                      <p className="text-[11px] text-slate-600 leading-snug">Read lecture notes, concepts, and keywords.</p>
+                      <p className="text-[11px] text-slate-600 leading-snug break-words-safe">Read lecture notes, concepts, and keywords.</p>
                     </div>
-                    <span className="text-[11px] text-sky-700 font-bold">Browse Notes ➔</span>
+                    <span className="text-[11px] text-sky-700 font-bold mt-2">Browse Notes ➔</span>
                   </button>
 
                   <button 
                     onClick={() => setActiveTab('Study Plans')} 
-                    className="p-4 bg-amber-50/70 hover:bg-amber-100/70 border border-amber-100 rounded-2xl text-left transition space-y-1.5 flex flex-col justify-between"
+                    className="p-4 min-h-[44px] bg-amber-50/70 hover:bg-amber-100/70 border border-amber-100 rounded-2xl text-left transition space-y-1.5 flex flex-col justify-between"
                   >
                     <div>
                       <span className="text-xl">🎯</span>
                       <p className="font-bold text-xs text-amber-950 mt-1">Saved Plans</p>
-                      <p className="text-[11px] text-slate-600 leading-snug">Track activities and mark completion in your plans.</p>
+                      <p className="text-[11px] text-slate-600 leading-snug break-words-safe">Track activities and mark completion in your plans.</p>
                     </div>
-                    <span className="text-[11px] text-amber-800 font-bold">Review Plans ➔</span>
+                    <span className="text-[11px] text-amber-800 font-bold mt-2">Review Plans ➔</span>
                   </button>
                 </div>
               </div>
 
               {/* Row 6: Recent Saved Plans Preview */}
               {savedPlans.length > 0 && (
-                <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 space-y-3 shadow-xs">
+                <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 space-y-3 shadow-xs">
                   <div className="flex justify-between items-center">
                     <h4 className="font-bold text-xs text-slate-900 uppercase tracking-wider">Recently Saved Plans</h4>
                     <button onClick={() => setActiveTab('Study Plans')} className="text-xs text-indigo-600 font-semibold hover:underline">
@@ -1807,14 +1807,14 @@ export default function App() {
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {savedPlans.slice(0, 2).map((plan) => (
-                      <div key={plan.id} className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center text-xs">
-                        <div className="min-w-0 pr-2">
+                      <div key={plan.id} className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
+                        <div className="min-w-0 flex-1">
                           <p className="font-bold text-slate-900 truncate">{plan.topic}</p>
                           <p className="text-[11px] text-slate-500">Score: {plan.score}/{plan.total_questions || 3} • {new Date(plan.created_at).toLocaleDateString()}</p>
                         </div>
                         <button 
                           onClick={() => handleReopenPlan(plan.id)}
-                          className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold shrink-0"
+                          className="min-h-[40px] bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-xl text-xs font-semibold shrink-0 flex items-center justify-center self-end sm:self-auto"
                         >
                           Reopen
                         </button>
@@ -1841,7 +1841,7 @@ export default function App() {
                     value={materialsSearch}
                     onChange={(e) => setMaterialsSearch(e.target.value)}
                     placeholder="Search topics, keywords..."
-                    className="w-full px-3.5 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-slate-50"
+                    className="w-full min-h-[44px] px-3.5 py-2 text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600 bg-slate-50"
                   />
                 </div>
               </div>
@@ -1855,18 +1855,18 @@ export default function App() {
                 ).map((sec) => {
                   const isExpanded = expandedMaterial === sec.id;
                   return (
-                    <div key={sec.id} className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs p-5 space-y-3 transition-all">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
-                        <div className="flex items-center space-x-2.5">
+                    <div key={sec.id} className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs p-4 sm:p-5 space-y-3 transition-all">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                        <div className="flex flex-wrap items-center gap-2">
                           <span className="text-[10px] font-mono font-bold bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-md">{sec.id}</span>
                           <span className="text-xs text-slate-400 font-mono">Module {sec.number}</span>
-                          <h4 className="font-bold text-sm text-slate-900">{sec.title}</h4>
+                          <h4 className="font-bold text-sm text-slate-900 break-words-safe">{sec.title}</h4>
                         </div>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex flex-wrap items-center gap-2 pt-1 sm:pt-0">
                           <button
                             type="button"
                             onClick={() => setExpandedMaterial(isExpanded ? null : sec.id)}
-                            className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3 py-1.5 rounded-lg transition"
+                            className="text-xs min-h-[44px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3 py-2 rounded-xl transition flex items-center justify-center"
                           >
                             {isExpanded ? "Hide Details ▲" : "Read Full Material ▼"}
                           </button>
@@ -1876,20 +1876,20 @@ export default function App() {
                               setActiveTab('Quizzes');
                               handleTriggerPracticeQuizPreCheck(sec.id, sec.title);
                             }}
-                            className="text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3 py-1.5 rounded-lg transition"
+                            className="text-xs min-h-[44px] bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-3.5 py-2 rounded-xl transition flex items-center justify-center"
                           >
                             Practice Quiz ➔
                           </button>
                         </div>
                       </div>
 
-                      <p className="text-xs text-slate-600 leading-relaxed font-medium">{sec.summary}</p>
+                      <p className="text-xs text-slate-600 leading-relaxed font-medium break-words-safe">{sec.summary}</p>
 
                       {isExpanded && (
                         <div className="space-y-4 pt-3 border-t border-slate-100 text-xs">
                           <div>
                             <h5 className="font-bold text-slate-900 mb-1">Detailed Syllabus Reading:</h5>
-                            <p className="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-200">{sec.content}</p>
+                            <p className="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-200 break-words-safe">{sec.content}</p>
                           </div>
 
                           <div>
@@ -1898,7 +1898,7 @@ export default function App() {
                               {sec.key_concepts.map((concept, cIdx) => (
                                 <li key={cIdx} className="flex items-start space-x-2 text-slate-700">
                                   <span className="text-emerald-500 font-bold shrink-0">✓</span>
-                                  <span>{concept}</span>
+                                  <span className="break-words-safe">{concept}</span>
                                 </li>
                               ))}
                             </ul>
@@ -1950,13 +1950,13 @@ export default function App() {
                             <span className="text-[10px] font-mono font-bold bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">{sec.id}</span>
                             <span className="text-xs text-slate-400 font-mono">Section {sec.number}</span>
                           </div>
-                          <p className="font-bold text-xs sm:text-sm text-slate-900">{sec.title}</p>
-                          <p className="text-xs text-slate-500">{sec.summary}</p>
+                          <p className="font-bold text-xs sm:text-sm text-slate-900 break-words-safe">{sec.title}</p>
+                          <p className="text-xs text-slate-500 break-words-safe">{sec.summary}</p>
                         </div>
                         <button 
                           onClick={() => handleTriggerPracticeQuizPreCheck(sec.id, sec.title)}
                           disabled={loadingPracticeQuiz}
-                          className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white px-5 py-2.5 rounded-xl text-xs font-semibold shrink-0 transition shadow-sm"
+                          className="w-full sm:w-auto min-h-[44px] bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white px-5 py-2.5 rounded-xl text-xs font-semibold shrink-0 transition shadow-sm flex items-center justify-center"
                         >
                           {loadingPracticeQuiz ? "Preparing Quiz..." : "Start Quiz ➔"}
                         </button>
@@ -1977,22 +1977,22 @@ export default function App() {
                     onRequestFullscreen={integrity.requestFullscreen}
                   />
                   <div className="flex items-center justify-between border-b pb-3 border-slate-100">
-                    <div>
+                    <div className="min-w-0 pr-2">
                       <div className="flex items-center space-x-2 mb-1">
                         <span className="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-mono font-bold">{activePracticeQuiz.sectionId}</span>
                         <span className="text-xs text-slate-400 font-mono">Practice Assessment</span>
                       </div>
-                      <h3 className="text-sm sm:text-base font-bold text-slate-900">{activePracticeQuiz.title}</h3>
+                      <h3 className="text-sm sm:text-base font-bold text-slate-900 truncate">{activePracticeQuiz.title}</h3>
                     </div>
                     <button 
                       onClick={() => setActivePracticeQuiz(null)}
-                      className="text-xs text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg font-medium transition"
+                      className="text-xs min-h-[40px] text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl font-medium transition shrink-0 flex items-center"
                     >
                       ✕ Exit Quiz
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {activePracticeQuiz.questions.map((q, idx) => (
                       <div key={q.id || idx} className="space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-col justify-between">
                         <div>
@@ -2000,10 +2000,10 @@ export default function App() {
                             <span className="text-[10px] font-bold text-indigo-600 font-mono">Q{idx + 1}</span>
                             <span className="text-[10px] text-slate-400">{q.sectionRef || activePracticeQuiz.sectionId}</span>
                           </div>
-                          <p className="font-semibold text-xs text-slate-900 mb-3 leading-snug">{q.question}</p>
+                          <p className="font-semibold text-xs text-slate-900 mb-3 leading-snug break-words-safe">{q.question}</p>
                           <div className="space-y-2">
                             {q.options.map((opt, oIdx) => (
-                              <label key={oIdx} className="flex items-start space-x-2.5 text-xs cursor-pointer p-2.5 rounded-lg hover:bg-slate-100 active:bg-slate-200 transition select-none border border-slate-100 bg-white">
+                              <label key={oIdx} className="flex items-start space-x-2.5 text-xs cursor-pointer p-3 min-h-[44px] rounded-lg hover:bg-slate-100 active:bg-slate-200 transition select-none border border-slate-100 bg-white">
                                 <input 
                                   type="radio" 
                                   name={`practice_q_${q.id || idx}`} 
@@ -2011,7 +2011,7 @@ export default function App() {
                                   onChange={() => handlePracticeOptionSelect(q.id || (idx + 1), opt)}
                                   className="mt-0.5 w-4 h-4 text-indigo-600 focus:ring-indigo-600 shrink-0"
                                 />
-                                <span className="leading-snug text-slate-800">{opt}</span>
+                                <span className="leading-snug text-slate-800 break-words-safe">{opt}</span>
                               </label>
                             ))}
                           </div>
@@ -2020,17 +2020,17 @@ export default function App() {
                     ))}
                   </div>
 
-                  <div className="flex gap-3 pt-2">
+                  <div className="flex flex-col sm:flex-row gap-3 pt-2">
                     <button 
                       onClick={handleSubmitPracticeQuiz} 
                       disabled={isEvaluatingPractice}
-                      className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white py-3 rounded-xl text-sm font-semibold transition shadow-md"
+                      className="w-full sm:flex-1 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white py-3 px-4 rounded-xl text-sm font-semibold transition shadow-md flex items-center justify-center"
                     >
                       {isEvaluatingPractice ? "Calculating Score in Application Code..." : "Submit Quiz & View Results"}
                     </button>
                     <button 
                       onClick={() => setActivePracticeQuiz(null)}
-                      className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-3 rounded-xl text-xs font-semibold transition"
+                      className="w-full sm:w-auto min-h-[44px] bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-3 rounded-xl text-xs font-semibold transition flex items-center justify-center"
                     >
                       Cancel
                     </button>
@@ -2044,14 +2044,14 @@ export default function App() {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4 border-slate-100">
                     <div>
                       <span className="text-[10px] font-mono bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">Assessment Completed</span>
-                      <h3 className="text-base sm:text-lg font-bold text-slate-900 mt-1">{activePracticeQuiz.title}</h3>
-                      <p className="text-xs text-slate-500">
+                      <h3 className="text-base sm:text-lg font-bold text-slate-900 mt-1 break-words-safe">{activePracticeQuiz.title}</h3>
+                      <p className="text-xs text-slate-500 break-words-safe">
                         {practiceResult.score === 3 
                           ? "Perfect score! 3 advanced mastery activities formulated."
                           : `Score: ${practiceResult.score}/${practiceResult.total}. Remedial activities formulated for missed concepts.`}
                       </p>
                     </div>
-                    <div className="px-5 py-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-left sm:text-right">
+                    <div className="px-5 py-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-left sm:text-right shrink-0">
                       <p className="text-[10px] text-emerald-700 font-bold uppercase tracking-wider">Calculated Score</p>
                       <p className="text-xl sm:text-2xl font-extrabold text-emerald-800">
                         {practiceResult.score} / {practiceResult.total} ({Math.round((practiceResult.score / practiceResult.total) * 100)}%)
@@ -2125,7 +2125,7 @@ export default function App() {
                       <span className="text-[11px] text-slate-500 font-medium">Click checkbox to mark activities complete</span>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {(practiceResult.proposedActivities || []).map((act, i) => {
                         const isDone = !!completedActivities[`practice_${i}`];
                         return (
@@ -2146,16 +2146,16 @@ export default function App() {
                                   </span>
                                 )}
                               </div>
-                              <p className={`font-bold text-xs ${isDone ? 'text-slate-500 line-through' : 'text-slate-900'}`}>
+                              <p className={`font-bold text-xs break-words-safe ${isDone ? 'text-slate-500 line-through' : 'text-slate-900'}`}>
                                 {act.title}
                               </p>
-                              <p className="text-[11px] text-slate-600 leading-relaxed">{act.description}</p>
+                              <p className="text-[11px] text-slate-600 leading-relaxed break-words-safe">{act.description}</p>
                             </div>
 
                             <button
                               type="button"
                               onClick={() => toggleActivityCompletion('practice', i, act)}
-                              className={`w-full py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center space-x-1.5 transition ${
+                              className={`w-full min-h-[44px] py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5 transition ${
                                 isDone 
                                   ? 'bg-emerald-600 hover:bg-emerald-700 text-white' 
                                   : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-300'
@@ -2171,26 +2171,26 @@ export default function App() {
 
                   {/* Quizzes Tab Action Buttons */}
                   <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
-                    <p className="text-xs text-slate-600">
+                    <p className="text-xs text-slate-600 break-words-safe">
                       {practicePlanSaved ? "✓ Study plan successfully saved to your profile!" : "Save these activities to your profile to track your progress."}
                     </p>
-                    <div className="flex gap-2 w-full sm:w-auto">
+                    <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                       {!practicePlanSaved ? (
                         <button 
                           onClick={handleSavePracticePlan} 
                           disabled={isSavingPracticePlan}
-                          className="flex-1 sm:flex-initial bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-md"
+                          className="w-full sm:w-auto min-h-[44px] bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-md flex items-center justify-center"
                         >
                           {isSavingPracticePlan ? "Saving Plan..." : "Save Study Plan ➔"}
                         </button>
                       ) : (
-                        <span className="text-xs text-emerald-700 font-bold px-3 py-2 bg-emerald-100 rounded-lg">
+                        <span className="text-xs min-h-[44px] text-emerald-700 font-bold px-3 py-2 bg-emerald-100 rounded-xl flex items-center justify-center">
                           Plan Saved ✓
                         </span>
                       )}
                       <button 
                         onClick={handleResetPracticeQuiz} 
-                        className="bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition"
+                        className="w-full sm:w-auto min-h-[44px] bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 px-4 py-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-center"
                       >
                         Retake Quiz
                       </button>
@@ -2199,7 +2199,7 @@ export default function App() {
                           setActivePracticeQuiz(null);
                           setPracticeResult(null);
                         }} 
-                        className="bg-slate-200 hover:bg-slate-300 text-slate-800 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition"
+                        className="w-full sm:w-auto min-h-[44px] bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-2.5 rounded-xl text-xs font-semibold transition flex items-center justify-center"
                       >
                         All Quizzes
                       </button>
@@ -2228,10 +2228,10 @@ export default function App() {
                   <p className="text-xs text-slate-500">Track and complete personalized study activities saved to your academic profile.</p>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <button onClick={fetchSavedPlans} className="text-xs bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg font-semibold text-slate-700 transition">
+                  <button onClick={fetchSavedPlans} className="text-xs min-h-[40px] bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl font-semibold text-slate-700 transition flex items-center">
                     ↻ Refresh
                   </button>
-                  <span className="text-xs font-mono bg-indigo-50 text-indigo-700 px-2.5 py-1.5 rounded-lg font-bold">
+                  <span className="text-xs min-h-[40px] flex items-center font-mono bg-indigo-50 text-indigo-700 px-2.5 py-1.5 rounded-xl font-bold">
                     {savedPlans.length} Plans
                   </span>
                 </div>
@@ -2255,7 +2255,7 @@ export default function App() {
                         <button
                           type="button"
                           onClick={() => setStudyPlansFilter('all')}
-                          className={`px-3 py-1.5 rounded-lg font-semibold transition ${
+                          className={`px-3 py-2 min-h-[40px] flex items-center rounded-xl font-semibold transition ${
                             studyPlansFilter === 'all' 
                               ? 'bg-slate-900 text-white' 
                               : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
@@ -2266,7 +2266,7 @@ export default function App() {
                         <button
                           type="button"
                           onClick={() => setStudyPlansFilter('in_progress')}
-                          className={`px-3 py-1.5 rounded-lg font-semibold transition ${
+                          className={`px-3 py-2 min-h-[40px] flex items-center rounded-xl font-semibold transition ${
                             studyPlansFilter === 'in_progress' 
                               ? 'bg-indigo-600 text-white' 
                               : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
@@ -2277,7 +2277,7 @@ export default function App() {
                         <button
                           type="button"
                           onClick={() => setStudyPlansFilter('completed')}
-                          className={`px-3 py-1.5 rounded-lg font-semibold transition ${
+                          className={`px-3 py-2 min-h-[40px] flex items-center rounded-xl font-semibold transition ${
                             studyPlansFilter === 'completed' 
                               ? 'bg-emerald-600 text-white' 
                               : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
@@ -2317,14 +2317,14 @@ export default function App() {
                       return (
                         <div 
                           key={plan.id} 
-                          className={`rounded-2xl border transition-all p-5 space-y-4 shadow-xs ${
+                          className={`rounded-2xl border transition-all p-4 sm:p-5 space-y-4 shadow-xs ${
                             isPlanComplete ? 'bg-emerald-50/40 border-emerald-200' : 'bg-white border-slate-200'
                           }`}
                         >
                           {/* Plan Card Header */}
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
-                            <div>
-                              <div className="flex items-center space-x-2 mb-1">
+                            <div className="min-w-0">
+                              <div className="flex flex-wrap items-center gap-1.5 mb-1">
                                 <span className="font-mono text-[10px] font-bold bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded">
                                   {plan.id}
                                 </span>
@@ -2337,11 +2337,11 @@ export default function App() {
                                   </span>
                                 )}
                               </div>
-                              <h4 className="font-bold text-sm text-slate-900">{plan.topic}</h4>
+                              <h4 className="font-bold text-sm text-slate-900 break-words-safe">{plan.topic}</h4>
                               <p className="text-[11px] text-slate-500">Student: {plan.student_name} ({plan.student_id})</p>
                             </div>
 
-                            <div className="flex items-center space-x-3">
+                            <div className="flex items-center space-x-3 shrink-0">
                               <div className="text-right">
                                 <span className="text-[10px] text-slate-400 block uppercase tracking-wider font-bold">Score</span>
                                 <span className="text-sm font-extrabold text-slate-800">
@@ -2350,7 +2350,7 @@ export default function App() {
                               </div>
                               <button 
                                 onClick={() => handleReopenPlan(plan.id)} 
-                                className="bg-slate-100 hover:bg-slate-200 text-slate-800 px-3.5 py-2 rounded-xl text-xs font-semibold shrink-0 transition"
+                                className="min-h-[40px] bg-slate-100 hover:bg-slate-200 text-slate-800 px-3.5 py-2 rounded-xl text-xs font-semibold shrink-0 transition flex items-center justify-center"
                               >
                                 Modal View ↗
                               </button>
@@ -2376,7 +2376,7 @@ export default function App() {
                           {/* Interactive Activity Checklist */}
                           <div className="space-y-2">
                             <h5 className="font-bold text-xs text-slate-700 uppercase tracking-wider">Activities Checklist:</h5>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                               {activitiesList.map((act, idx) => {
                                 const isDone = !!completedActivities[`${plan.id}_${idx}`] || act.completed;
                                 return (
@@ -2397,10 +2397,10 @@ export default function App() {
                                           </span>
                                         )}
                                       </div>
-                                      <p className={`font-bold text-xs ${isDone ? 'text-slate-500 line-through' : 'text-slate-900'}`}>
+                                      <p className={`font-bold text-xs break-words-safe ${isDone ? 'text-slate-500 line-through' : 'text-slate-900'}`}>
                                         {act.title}
                                       </p>
-                                      <p className="text-[11px] text-slate-600 leading-relaxed">
+                                      <p className="text-[11px] text-slate-600 leading-relaxed break-words-safe">
                                         {act.description}
                                       </p>
                                     </div>
@@ -2408,7 +2408,7 @@ export default function App() {
                                     <button
                                       type="button"
                                       onClick={() => toggleActivityCompletion(plan.id, idx, act, plan.activities)}
-                                      className={`w-full py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center space-x-1.5 transition ${
+                                      className={`w-full min-h-[44px] py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center space-x-1.5 transition ${
                                         isDone 
                                           ? 'bg-emerald-600 hover:bg-emerald-700 text-white' 
                                           : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-300'
@@ -2436,16 +2436,21 @@ export default function App() {
       {/* REOPENED PLAN MODAL */}
       {reopenedPlanModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 md:p-6 z-50">
-          <div className="bg-white text-slate-900 w-full max-w-2xl max-h-[90vh] flex flex-col rounded-2xl p-6 shadow-2xl border border-slate-200 space-y-4 overflow-y-auto">
+          <div className="bg-white text-slate-900 w-full max-w-2xl max-h-[92dvh] flex flex-col rounded-2xl p-4 sm:p-6 shadow-2xl border border-slate-200 space-y-4 overflow-y-auto">
             <div className="flex items-center justify-between border-b pb-3 border-slate-200">
-              <div>
-                <h3 className="font-bold text-base text-slate-900">Saved Study Plan</h3>
-                <p className="text-xs text-slate-400 font-mono">Plan ID: {reopenedPlanModal.id}</p>
+              <div className="min-w-0">
+                <h3 className="font-bold text-base text-slate-900 truncate">Saved Study Plan</h3>
+                <p className="text-xs text-slate-400 font-mono truncate">Plan ID: {reopenedPlanModal.id}</p>
               </div>
-              <button onClick={() => setReopenedPlanModal(null)} className="text-slate-400 hover:text-slate-800 text-xl font-bold p-1">&times;</button>
+              <button 
+                onClick={() => setReopenedPlanModal(null)} 
+                className="text-slate-400 hover:text-slate-800 text-xl font-bold p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg"
+              >
+                &times;
+              </button>
             </div>
 
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-1">
+            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-1 break-words-safe">
               <p><strong>Student:</strong> {reopenedPlanModal.student_name} ({reopenedPlanModal.student_id})</p>
               <p><strong>Topic:</strong> {reopenedPlanModal.topic}</p>
               <p><strong>Assessment Score:</strong> {reopenedPlanModal.score} / {reopenedPlanModal.total_questions || 3}</p>
@@ -2471,16 +2476,16 @@ export default function App() {
                         <span className="text-[10px] font-mono bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded font-bold">
                           {act.sectionRef || act.sectionId || "General"}
                         </span>
-                        <p className={`font-bold text-xs ${isDone ? 'text-slate-500 line-through' : 'text-slate-900'}`}>
+                        <p className={`font-bold text-xs break-words-safe ${isDone ? 'text-slate-500 line-through' : 'text-slate-900'}`}>
                           {act.title}
                         </p>
-                        <p className="text-xs text-slate-600">{act.description}</p>
+                        <p className="text-xs text-slate-600 break-words-safe">{act.description}</p>
                       </div>
 
                       <button
                         type="button"
                         onClick={() => toggleActivityCompletion(reopenedPlanModal.id, idx, act, reopenedPlanModal.activities)}
-                        className={`py-1.5 px-3 rounded-lg text-xs font-semibold shrink-0 transition ${
+                        className={`min-h-[44px] py-2 px-3 rounded-xl text-xs font-semibold shrink-0 transition flex items-center justify-center ${
                           isDone 
                             ? 'bg-emerald-600 hover:bg-emerald-700 text-white' 
                             : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-300'
@@ -2495,7 +2500,10 @@ export default function App() {
             </div>
 
             <div className="flex justify-end pt-2">
-              <button onClick={() => setReopenedPlanModal(null)} className="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-2 rounded-xl text-xs font-semibold">
+              <button 
+                onClick={() => setReopenedPlanModal(null)} 
+                className="w-full sm:w-auto min-h-[44px] bg-slate-200 hover:bg-slate-300 text-slate-800 px-5 py-2 rounded-xl text-xs font-semibold flex items-center justify-center"
+              >
                 Close
               </button>
             </div>
